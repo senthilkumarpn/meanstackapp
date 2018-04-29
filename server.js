@@ -52,7 +52,7 @@ app.use('/api', api);
 app.get("/",(req,res)=>{
     res.send("The API is at localhost:"+port+"/api");
 });
-
+ 
 // Send all other requests to the Angular app
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'dist/index.html'));
