@@ -2,28 +2,15 @@ const express = require('express');
 const router = express.Router();
 const MongoClient = require('mongodb').MongoClient;
 const ObjectID = require('mongodb').ObjectID;
-const User = require("../model/user");
-
+const User = require("../model/user.model");
+const Applicationusers = require("../model/applicationusers.model");
+const config = require("../../config");
 const jwt = require("jsonwebtoken");
-const config = {
-    'secret':'iamindian',
-    'database':'mongodb://localhost:27017'
-}
-
-// Connect
-// const connection = (closure) => {
-//     return MongoClient.connect('mongodb://localhost:27017/mean', (err, client) => {
-//         if (err) return console.log(err);
-
-//         closure(db);
-//     });
-// };
-
 const connection = (closure) => {
-    return MongoClient.connect('mongodb://localhost:27017', (err, client) => {
+    return MongoClient.connect(config.dbconnstring, (err, client) => {
     if (err) return console.log(err);
     
-    let db = client.db('mean');
+    let db = client.db(config.dbname);
     closure(db);
     });
     };
@@ -70,6 +57,17 @@ router.post("/authenticate",(req,res)=>{
         }
     })
 });
+router.post("/login",(req,res)=>{
+    Applicationusers.findOne({name:req.body.name,password:req.body.password},(err,user)=>{
+        if(err) throw err;
+        if(!user){
+            res.json({status:false,message:"login failure"});
+        }
+        else if(user){
+            res.json({status:true,message:"Login success"});
+        }
+    });
+});
 router.get("/setup",(req,res)=>{
     var nick = new User({
         name:'senthilkumar',
@@ -88,12 +86,10 @@ router.get("/setup",(req,res)=>{
 // Get users
 router.get('/users', (req, res) => {
     connection((db) => {
-        debugger;
         db.collection('users')
             .find()
             .toArray()
             .then((users) => {
-                console.log(users);
                 response.data = users;
                 res.json(response);
             })
@@ -102,5 +98,4 @@ router.get('/users', (req, res) => {
             });
     });
 });
-
 module.exports = router;

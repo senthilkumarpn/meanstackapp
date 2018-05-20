@@ -3,6 +3,8 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const http = require('http');
 const app = express();
+const cors = require('cors');
+
 
 //new
 const morgan = require("morgan");
@@ -17,16 +19,29 @@ const api = require('./server/routes/api');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false}));
 
+var originsWhitelist = [
+    "http://localhost:4200", 'http://dev2.techoil.com', 'http://dev.techoil.com',  'https://dev2.techoil.com',  'https://dev.techoil.com'
+   ];
+   var corsOptions = {
+     origin: function(origin, callback){
+           var isWhitelisted = originsWhitelist.indexOf(origin) !== -1;
+           callback(null, isWhitelisted);
+     },
+     credentials:false
+   }
+   app.use(cors(corsOptions));
+ 
+
 // Angular DIST output folder
 app.use(express.static(path.join(__dirname, 'dist')));
 
-mongoose.connect(config.database);
+mongoose.connect(config.dbconnstring);
 
 app.use(morgan('dev'));
 app.set("superSecret",config.secret);
 
 //authendication
-
+/*
 app.use((req,res,next)=>{
     var token = req.body.token || req.query.token || req.headers['x-access-token'];
     if(token){
@@ -42,10 +57,11 @@ app.use((req,res,next)=>{
         })
     }
     else{
-        return res.status(400).send({success:false,message:'No token Provided'});
+        next();
+//        return res.status(400).send({success:false,message:'No token Provided'});
     }
 })
-
+*/
 // API location
 app.use('/api', api);
 
@@ -59,7 +75,8 @@ app.get('*', (req, res) => {
 });
 
 //Set Port
-const port = process.env.PORT || '3000';
+//const port = process.env.PORT || '3000';
+const port = '3000';
 app.set('port', port);
 
 const server = http.createServer(app);
