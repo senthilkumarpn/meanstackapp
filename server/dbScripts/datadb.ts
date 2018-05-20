@@ -19,13 +19,26 @@ db.users.insert({"Name":"Sen","Company":"Inatech","Department":"RD","Branch":"CH
 db.users.insert({"Name":"dheeban","Company":"Inatech","Department":"RD","Branch":"CHENNAI","EmailId":"senthilkumar.p7@inatech.com"});
 
 
-db.users.drop();
+db.applicationusers.drop();
 db.createCollection("applicationusers");
 db.applicationusers.insert({"name":"senthilkumar.p","password":"sasa123","status":"A"});
 db.applicationusers.insert({"name":"rajesh.r","password":"sasa123","status":"A"});
 
 
+db.Products.drop();
+db.Products.insert({"ProductId":"1","ProductName":"LifeBoy","Price":"10"});
+db.Products.insert({"ProductId":"2","ProductName":"Hamam","Price":"20"});
+db.Products.insert({"ProductId":"3","ProductName":"Liril","Price":"30"});
+db.Products.insert({"ProductId":"4","ProductName":"Roes","Price":"40"});
+db.Products.insert({"ProductId":"5","ProductName":"Dettol","Price":"50"});
+db.Products.insert({"ProductId":"6","ProductName":"Lux","Price":"60"});
+
+
 /*
 Application user list  
 */
-db.applicationuser
+db.Applicationuser.drop();
+db.Applicationuser.insert({"name":"senthilkumar.p","password":"sasa@123","status":"A"});
+db.Applicationuser.insert({"name":"sentthill","password":"sasa@123","status":"A"});
+db.Applicationuser.insert({"name":"seenu.p","password":"sasa@123","status":"A"});
+
