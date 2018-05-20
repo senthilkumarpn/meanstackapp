@@ -5,6 +5,8 @@ const http = require('http');
 const app = express();
 const cors = require('cors');
 
+const mongodbAPI = require("./server/routes/mongodb/mongo.api");
+const authentication = require('./server/ad-auth-middleware/ad.auth');
 
 //new
 const morgan = require("morgan");
@@ -16,8 +18,8 @@ const config = require("./config");
 const api = require('./server/routes/api');
 
 // Parsers
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false}));
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: false}));
 
 var originsWhitelist = [
     "http://localhost:4200", 'http://dev2.techoil.com', 'http://dev.techoil.com',  'https://dev2.techoil.com',  'https://dev.techoil.com'
@@ -29,13 +31,18 @@ var originsWhitelist = [
      },
      credentials:false
    }
-   app.use(cors(corsOptions));
+app.use(cors(corsOptions));
  
 
 // Angular DIST output folder
 app.use(express.static(path.join(__dirname, 'dist')));
 
-mongoose.connect(config.dbconnstring);
+
+
+//Authentication
+app.use(authentication);
+// API location
+app.use('/mongodb', mongodbAPI);
 
 app.use(morgan('dev'));
 app.set("superSecret",config.secret);
@@ -63,6 +70,7 @@ app.use((req,res,next)=>{
 })
 */
 // API location
+mongoose.connect(config.dbconnstring);
 app.use('/api', api);
 
 app.get("/",(req,res)=>{
