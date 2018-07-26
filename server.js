@@ -22,7 +22,7 @@ app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: false}));
 
 var originsWhitelist = [
-    "http://localhost:4200", 'http://dev2.techoil.com', 'http://dev.techoil.com',  'https://dev2.techoil.com',  'https://dev.techoil.com'
+    "http://localhost:4200",
    ];
    var corsOptions = {
      origin: function(origin, callback){
